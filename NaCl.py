@@ -39,7 +39,9 @@ def get_constants():
     densities = 1.0/specific_volumes 
     mass_NaCl_over_mass_water = molalities * 58.443 / 1000.0
 
-    def error_function((a, b, c, d, e)):
+    def error_function(arg_array):
+        a, b, c, d, e = arg_array
+        
         sum = 0.0
         for t, i in zip(temperatures, range(len(temperatures))):
             for m, j in zip(mass_NaCl_over_mass_water, range(len(mass_NaCl_over_mass_water))):
@@ -47,7 +49,7 @@ def get_constants():
         return sum
 
 
-    a, b, c, d, e = scipy.optimize.fmin(error_function, (0.0001, 2, 3, 4, 1), full_output=1, xtol=1e-29, ftol=1e-29, maxiter=10000, maxfun=10000)[0]
+    a, b, c, d, e = scipy.optimize.fmin(error_function, (0.0001, 2.0, 3.0, 4.0, 1.0), full_output=1, xtol=1e-29, ftol=1e-29, maxiter=10000, maxfun=10000)[0]
 
     x = []
     y = []
@@ -67,8 +69,8 @@ def get_constants():
                 max_diff = abs(d_table - d_func)
             count += 1
 
-    print "Density = %0.4g r^2 + %0.4g r + %0.4e t^2 + %0.4e t + %0.4f" % (c, d, a, b, e)
-    print "Max diff = %0.4g" % max_diff
+    print("Density = %0.4g r^2 + %0.4g r + %0.4e t^2 + %0.4e t + %0.4f" % (c, d, a, b, e))
+    print("Max diff = %0.4g" % max_diff)
     return a, b, c, d, e
 
 def plot():
@@ -85,21 +87,21 @@ def plot():
 def main():
     # If nothing is specified on command line, enter interactive mode:
     if len(sys.argv) == 1:
-        solute = int(raw_input("Solutes:\n\t1: NaCl\n\t2: sucrose\nEnter solute: "))
-        water_mass = float(raw_input("Enter H2O mass: "))
-        solute_mass = float(raw_input("Enter solute mass: "))
-        t = float(raw_input("Enter temperature (C): "))
+        solute = int(input("Solutes:\n\t1: NaCl\n\t2: sucrose\nEnter solute: "))
+        water_mass = float(input("Enter H2O mass: "))
+        solute_mass = float(input("Enter solute mass: "))
+        t = float(input("Enter temperature (C): "))
     elif len(sys.argv) == 4:
         water_mass = float(sys.argv[1])
         solute_mass = float(sys.argv[2])
         t = float(sys.argv[3])
     else:
-        print "USAGE:    python NaCl.py mass_of_H2O mass_of_NaCl temperature_in_Celsius"
-        print "EXAMPLE:  python NaCl.py 10.416 1.013 37"
+        print("USAGE:    python NaCl.py mass_of_H2O mass_of_NaCl temperature_in_Celsius")
+        print("EXAMPLE:  python NaCl.py 10.416 1.013 37")
         exit()
     m = solute_mass / water_mass
     a, b, c, d, e = get_constants()
-    print a*t**2 + b*t + c*m**2 + d*m + e
+    print(a*t**2 + b*t + c*m**2 + d*m + e)
 
 if __name__ == "__main__":
     main()
