@@ -19,12 +19,6 @@ def get_constants():
     where density is in g/mL, t is temperature in C, and m is the mass ratio
     
         m = (mass of NaCl) / (mass of water)
-    
-    Args:
-        currently none.
-        
-    Returns:
-        A list of the five constants (a, b, c, d, e) defined above.
     """
     temperatures = [20.0, 25.0, 30.0, 40.0]
     molalities = numpy.array([0.100, 0.250, 0.500, 0.750, 1.000, 2.000, 3.000, 4.000, 5.000])
@@ -69,7 +63,7 @@ def get_constants():
                 max_diff = abs(d_table - d_func)
             count += 1
 
-    print("Density = %0.4g r^2 + %0.4g r + %0.4e t^2 + %0.4e t + %0.4f" % (c, d, a, b, e))
+    print("Density = %0.4g r² + %0.4g r + %0.4e t² + %0.4e t + %0.4f" % (c, d, a, b, e))
     print("Max diff = %0.4g" % max_diff)
     return a, b, c, d, e
 
@@ -87,10 +81,9 @@ def plot():
 def main():
     # If nothing is specified on command line, enter interactive mode:
     if len(sys.argv) == 1:
-        solute = int(input("Solutes:\n\t1: NaCl\n\t2: sucrose\nEnter solute: "))
-        water_mass = float(input("Enter H2O mass: "))
-        solute_mass = float(input("Enter solute mass: "))
-        t = float(input("Enter temperature (C): "))
+        water_mass = float(input("Enter H₂O mass: "))
+        solute_mass = float(input("Enter NaCl mass: "))
+        t = float(input("Enter temperature (°C): "))
     elif len(sys.argv) == 4:
         water_mass = float(sys.argv[1])
         solute_mass = float(sys.argv[2])
@@ -101,7 +94,8 @@ def main():
         exit()
     m = solute_mass / water_mass
     a, b, c, d, e = get_constants()
-    print(a*t**2 + b*t + c*m**2 + d*m + e)
+    ρ = a*t**2 + b*t + c*m**2 + d*m + e
+    print("Density = %0.3f g/mL" % ρ)
 
 if __name__ == "__main__":
     main()
